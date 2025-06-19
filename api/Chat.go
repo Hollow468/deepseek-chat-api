@@ -9,6 +9,7 @@ import (
 )
 
 var Model = "deepseek-ai/DeepSeek-V3"
+var Prompt = "你是一个AI助手"
 var TokenSpent = false
 
 func Chat(message string) string {
@@ -16,6 +17,10 @@ func Chat(message string) string {
 	jsonStr := `{
   "model": "` + Model + `",
   "messages": [
+	{
+	  "role": "system",
+      "content": "` + Prompt + `"
+	}
     {
       "role": "user",
       "content": "` + message + `"
