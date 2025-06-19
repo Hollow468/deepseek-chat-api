@@ -44,6 +44,11 @@ func main() {
 			return
 		}
 
+		if strings.HasPrefix(msg, "/balance") {
+			wr.Write([]byte(api.Balance()))
+			return
+		}
+
 		if msg == "/help" {
 			wr.Write([]byte("/help"))
 			return
