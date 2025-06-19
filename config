@@ -1,0 +1,5 @@
+{
+  "model": "deepseek-ai/DeepSeek-V3",
+  "prompt": "你是一个AI助手",
+  "token_spent": false
+}

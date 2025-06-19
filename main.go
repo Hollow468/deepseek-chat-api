@@ -2,12 +2,21 @@ package main
 
 import (
 	"gos/api"
+	"gos/load"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
 func main() {
+	cfg, err := load.LoadConfig()
+	if err == nil {
+		api.Model = cfg.Model
+		api.Prompt = cfg.Prompt
+		api.TokenSpent = cfg.TokenSpent
+		println("config loaded")
+	}
+
 	http.HandleFunc("/api/chat", func(wr http.ResponseWriter, req *http.Request) {
 		msg := req.URL.Query().Get("msg")
 
@@ -74,6 +83,22 @@ func main() {
 			wr.Write([]byte("/help"))
 			return
 		}
+
+		if msg == "/save" {
+			cfg := load.ChatConfig{
+				Model:      api.Model,
+				Prompt:     api.Prompt,
+				TokenSpent: api.TokenSpent,
+			}
+			err := load.SaveConfig(cfg)
+			if err != nil {
+				wr.Write([]byte("保存失败: " + err.Error()))
+			} else {
+				wr.Write([]byte("配置已保存"))
+			}
+			return
+		}
+
 		if msg == "" {
 			wr.WriteHeader(http.StatusBadRequest)
 			wr.Write([]byte("缺少msg参数"))
@@ -85,4 +110,5 @@ func main() {
 	})
 	println(":5000")
 	http.ListenAndServe(":5000", nil)
+
 }
