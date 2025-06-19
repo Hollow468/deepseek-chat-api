@@ -1,24 +1,24 @@
 package api
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
-	"io"
-	"encoding/json"
 )
 
 type WeatherResponse struct {
-	Status string `json:"status"`
 	Lives []weatherInfo `json:"lives"`
 }
 type weatherInfo struct {
-	City string `json:"city"`
-	Weather string `json:"weather"`
+	City        string `json:"city"`
+	Weather     string `json:"weather"`
 	Temperature string `json:"temperature"`
 }
+
 func Weather(city string) string {
 	url := "https://restapi.amap.com/v3/weather/weatherInfo?key=" + WeatherKey + "&city=" + city
-	
+
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -40,10 +40,10 @@ func Weather(city string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	jsonBytes, err := json.Marshal(result)
-	if err != nil {
-		log.Fatal(err)
+
+	if len(result.Lives) == 0 || result.Lives[0].City == "" {
+		return "未找到该城市天气信息"
 	}
-	return string(jsonBytes)
+	info := result.Lives[0]
+	return info.City + " 天气：" + info.Weather + "，温度：" + info.Temperature + "℃"
 }

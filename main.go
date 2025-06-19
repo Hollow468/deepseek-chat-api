@@ -19,6 +19,7 @@ func main() {
 			wr.Write([]byte("目前提示词: " + api.Prompt))
 			return
 		}
+
 		if strings.HasPrefix(msg, "/token=") {
 			ff := strings.TrimPrefix(msg, "/token=")
 			switch ff {
@@ -33,6 +34,13 @@ func main() {
 		} else if msg == "/token" {
 			ff := api.TokenSpent
 			wr.Write([]byte(strconv.FormatBool(ff)))
+			return
+		}
+
+		if strings.HasPrefix(msg, "/weather=") {
+			city := strings.TrimPrefix(msg, "/weather=")
+			result := api.Weather(city)
+			wr.Write([]byte(result))
 			return
 		}
 
