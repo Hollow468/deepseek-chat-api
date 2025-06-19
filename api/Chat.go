@@ -21,13 +21,14 @@ func Chat(message string) string {
 	  "role": "system",
       "content": "` + Prompt + `"
 	}
+	  ,
     {
       "role": "user",
       "content": "` + message + `"
     }
   ],
   "stream": false,
-  "max_tokens": 512,
+  "max_tokens": 4512,
   "enable_thinking": false,
   "thinking_budget": 4096,
   "min_p": 0.05,

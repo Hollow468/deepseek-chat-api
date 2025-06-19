@@ -15,6 +15,9 @@ func main() {
 			api.Prompt = strings.TrimPrefix(msg, "/prompt=")
 			wr.Write([]byte("系统提示词已设置为：" + api.Prompt))
 			return
+		} else if msg == "/prompt" {
+			wr.Write([]byte("目前提示词: " + api.Prompt))
+			return
 		}
 		if strings.HasPrefix(msg, "/token=") {
 			ff := strings.TrimPrefix(msg, "/token=")
@@ -24,8 +27,9 @@ func main() {
 				wr.Write([]byte("关闭Token回显"))
 			case "true":
 				api.TokenSpent = true
-				wr.Write([]byte("关闭Token回显"))
+				wr.Write([]byte("开启Token回显"))
 			}
+			return
 		} else if msg == "/token" {
 			ff := api.TokenSpent
 			wr.Write([]byte(strconv.FormatBool(ff)))
