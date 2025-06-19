@@ -2,11 +2,14 @@ package api
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
 
 var Model = "deepseek-ai/DeepSeek-V3"
+var TokenSpent = false
 
 func Chat(message string) string {
 	url := "https://api.siliconflow.cn/v1/chat/completions"
@@ -63,5 +66,34 @@ func Chat(message string) string {
 	if err != nil {
 		panic(err)
 	}
-	return string(body)
+
+	var result struct {
+		Choices []struct {
+			Message struct {
+				Content string `json:"content"`
+			} `json:"message"`
+		} `json:"choices"`
+	}
+	var usage struct {
+		Usage struct {
+			TotalTokens int `json:"total_tokens"`
+		} `json:"usage"`
+	}
+
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(body, &usage)
+	if err != nil {
+		panic(err)
+	}
+	if len(result.Choices) > 0 {
+		if TokenSpent {
+			return result.Choices[0].Message.Content + "\ntotal_tokens: " + fmt.Sprint(usage.Usage.TotalTokens)
+		} else {
+			return result.Choices[0].Message.Content
+		}
+	}
+	return ""
 }
