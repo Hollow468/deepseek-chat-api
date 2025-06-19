@@ -11,22 +11,31 @@ import (
 var Model = "deepseek-ai/DeepSeek-V3"
 var Prompt = "你是一个AI助手"
 var TokenSpent = false
+var history []string
+
+const maxhistory = 10
 
 func Chat(message string) string {
+	// 追加用户消息到历史
+	history = append(history, message)
+	if len(history) > maxhistory {
+		history = history[len(history)-maxhistory:]
+	}
+
 	url := "https://api.siliconflow.cn/v1/chat/completions"
+	// 构造历史消息JSON
+	messages := "[{\"role\": \"system\", \"content\": \"" + Prompt + "\"},"
+	for _, msg := range history {
+		messages += "{\"role\": \"user\", \"content\": \"" + msg + "\"},"
+	}
+	if len(messages) > 0 && messages[len(messages)-1] == ',' {
+		messages = messages[:len(messages)-1]
+	}
+	messages += "]"
+
 	jsonStr := `{
   "model": "` + Model + `",
-  "messages": [
-	{
-	  "role": "system",
-      "content": "` + Prompt + `"
-	}
-	  ,
-    {
-      "role": "user",
-      "content": "` + message + `"
-    }
-  ],
+  "messages": ` + messages + `,
   "stream": false,
   "max_tokens": 4512,
   "enable_thinking": false,
