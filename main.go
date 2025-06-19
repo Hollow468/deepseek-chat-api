@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"gos/api"
 	"gos/load"
 	"net/http"
@@ -9,6 +10,9 @@ import (
 )
 
 func main() {
+	port := flag.String("port", "5000", "http监听端口")
+	flag.Parse()
+
 	cfg, err := load.LoadConfig()
 	if err == nil {
 		api.Model = cfg.Model
@@ -31,6 +35,11 @@ func main() {
 
 		if strings.HasPrefix(msg, "/token=") {
 			ff := strings.TrimPrefix(msg, "/token=")
+			if n, err := strconv.Atoi(ff); err == nil {
+				api.MaxTokens = n
+				wr.Write([]byte("max_tokens已设置为:" + ff))
+				return
+			}
 			switch ff {
 			case "false":
 				api.TokenSpent = false
@@ -114,7 +123,7 @@ func main() {
 		result := api.Chat(msg)
 		wr.Write([]byte(result))
 	})
-	println(":5000")
-	http.ListenAndServe(":5000", nil)
 
+	println(":" + *port)
+	http.ListenAndServe(":"+*port, nil)
 }

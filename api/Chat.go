@@ -12,6 +12,7 @@ var Model = "deepseek-ai/DeepSeek-V3"
 var Prompt = "你是一个AI助手"
 var TokenSpent = false
 var history []string
+var MaxTokens = 4512
 
 const maxhistory = 10
 
@@ -37,7 +38,7 @@ func Chat(message string) string {
   "model": "` + Model + `",
   "messages": ` + messages + `,
   "stream": false,
-  "max_tokens": 4512,
+  "max_tokens": ` + fmt.Sprint(MaxTokens) + `,
   "enable_thinking": false,
   "thinking_budget": 4096,
   "min_p": 0.05,
@@ -113,7 +114,6 @@ func Chat(message string) string {
 	return ""
 }
 
-// 清空历史记录
 func ClearHistory() {
 	history = nil
 }
