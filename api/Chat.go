@@ -2,19 +2,20 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 )
 
-func Chat(message string) {
+var Model = "deepseek-ai/DeepSeek-V3"
+
+func Chat(message string) string {
 	url := "https://api.siliconflow.cn/v1/chat/completions"
 	jsonStr := `{
-  "model": "Qwen/QwQ-32B",
+  "model": "` + Model + `",
   "messages": [
     {
       "role": "user",
-      "content": ` + message + `
+      "content": "` + message + `"
     }
   ],
   "stream": false,
@@ -62,5 +63,5 @@ func Chat(message string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(string(body))
+	return string(body)
 }
