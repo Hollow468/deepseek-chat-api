@@ -99,6 +99,12 @@ func main() {
 			return
 		}
 
+		if msg == "/clear" {
+			api.ClearHistory()
+			wr.Write([]byte("历史记录已清空"))
+			return
+		}
+
 		if msg == "" {
 			wr.WriteHeader(http.StatusBadRequest)
 			wr.Write([]byte("缺少msg参数"))

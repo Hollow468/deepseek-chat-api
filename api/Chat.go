@@ -112,3 +112,8 @@ func Chat(message string) string {
 	}
 	return ""
 }
+
+// 清空历史记录
+func ClearHistory() {
+	history = nil
+}
