@@ -49,6 +49,18 @@ func main() {
 			return
 		}
 
+		if strings.HasPrefix(msg, "/model=") {
+			m := strings.TrimPrefix(msg, "/model=")
+			if !api.ModelCheck(m) {
+				api.Model = m
+				wr.Write([]byte("设置成功:" + api.Model))
+				return
+			} else if msg == "/model" {
+				wr.Write([]byte("当前模型:" + api.Model))
+				return
+			}
+		}
+
 		if msg == "/help" {
 			wr.Write([]byte("/help"))
 			return
