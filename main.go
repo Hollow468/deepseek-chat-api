@@ -51,14 +51,23 @@ func main() {
 
 		if strings.HasPrefix(msg, "/model=") {
 			m := strings.TrimPrefix(msg, "/model=")
-			if !api.ModelCheck(m) {
+			if api.ModelCheck(m) {
 				api.Model = m
 				wr.Write([]byte("设置成功:" + api.Model))
 				return
-			} else if msg == "/model" {
-				wr.Write([]byte("当前模型:" + api.Model))
+			} else {
+				wr.Write([]byte("模型无效"))
 				return
 			}
+		} else if msg == "/model" {
+			wr.Write([]byte("当前模型:" + api.Model))
+			return
+		}
+
+		if msg == "/model.list" {
+			models := api.GetAllModels()
+			wr.Write([]byte("可用模型：\n" + strings.Join(models, "\n")))
+			return
 		}
 
 		if msg == "/help" {
