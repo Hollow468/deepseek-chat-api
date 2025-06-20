@@ -7,10 +7,12 @@ import (
 	"net/http"
 )
 
+var ImgModel = "Kwai-Kolors/Kolors"
+
 func CreateImg(prompt string) string {
 	url := "https://api.siliconflow.cn/v1/images/generations"
 	jstr := `{
-  "model": "Kwai-Kolors/Kolors",
+  "model": "` + ImgModel + `",
   "prompt": "` + prompt + `",
   "image_size": "1024x1024",
   "batch_size": 1,

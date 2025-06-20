@@ -95,8 +95,32 @@ func main() {
 			return
 		}
 
+		if strings.HasPrefix(msg, "/model.img=") {
+			model := strings.TrimPrefix(msg, "/model.img=")
+			api.ImgModel = model
+			wr.Write([]byte("图片模型已设置为: " + api.ImgModel))
+			return
+		}
+
 		if msg == "/help" {
-			wr.Write([]byte("/help"))
+			helpText := `可用命令：
+/help - 显示帮助信息
+/prompt=xxx - 设置系统提示词
+/prompt - 查看当前提示词
+/token=true|false - 开启/关闭Token回显
+/token=数字 - 设置max_tokens数量
+/token - 查看当前Token回显状态
+/weather=城市名 - 查询天气
+/balance - 查看账户余额
+/model=模型名 - 设置模型
+/model - 查看当前模型
+/model.list - 查看所有可用模型
+/model.img= - 配置生图模型
+/save - 保存当前配置到文件
+/clear - 清空聊天历史
+/config.list - 查看所有配置项
+/img=描述 - 生成图片`
+			wr.Write([]byte(helpText))
 			return
 		}
 
