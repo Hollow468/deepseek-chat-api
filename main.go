@@ -88,6 +88,13 @@ func main() {
 			return
 		}
 
+		if strings.HasPrefix(msg, "/img=") {
+			ct := strings.TrimPrefix(msg, "/img=")
+			rq := api.CreateImg(ct)
+			wr.Write([]byte(rq))
+			return
+		}
+
 		if msg == "/help" {
 			wr.Write([]byte("/help"))
 			return
