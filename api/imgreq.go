@@ -9,16 +9,26 @@ import (
 
 var ImgModel = "Kwai-Kolors/Kolors"
 
-func CreateImg(prompt string) string {
+func CreateImg(prompt string, negativePrompt ...string) string {
 	url := "https://api.siliconflow.cn/v1/images/generations"
-	jstr := `{
+
+	baseJSON := `{
   "model": "` + ImgModel + `",
   "prompt": "` + prompt + `",
   "image_size": "1024x1024",
   "batch_size": 1,
   "num_inference_steps": 20,
-  "guidance_scale": 7.5
+  "guidance_scale": 7.5`
+
+	if len(negativePrompt) > 0 && negativePrompt[0] != "" {
+		baseJSON += `,
+  "negative_prompt": "` + negativePrompt[0] + `"`
+	}
+
+	baseJSON += `
 }`
+
+	jstr := baseJSON
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jstr)))
 	if err != nil {
